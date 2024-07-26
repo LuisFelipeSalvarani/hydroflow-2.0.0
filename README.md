@@ -104,12 +104,12 @@ To get started with this project, follow these steps:
     - Start the Node.js backend:
       ```bash
       cd backend
-      npm start
+      npm run server
       ```
     - Start the React frontend:
       ```bash
       cd frontend
-      npm start
+      npm run start
       ```
 
 ## Contributing
