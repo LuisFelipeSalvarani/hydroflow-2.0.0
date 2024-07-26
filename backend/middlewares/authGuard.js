@@ -7,9 +7,7 @@ const authGuard = async (req, res, next) => {
     const token = authHeader && authHeader.split(" ")[1]
 
     // Checa se o cabeçalho possui um token
-    if(!token) return res.status(401).json({errors: ["Acesso negado!"]}
-
-    )
+    if(!token) return res.status(401).json({errors: ["Acesso negado!"]})
 
     // Checa se o token é válido
     try {
