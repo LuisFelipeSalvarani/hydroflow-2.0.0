@@ -27,7 +27,7 @@ const register = async(req, res) => {
     const salt = await bcrypt.genSalt()
     const passwordHash = await bcrypt.hash(password, salt)
 
-    // Create user
+    // Criação do usuário
     const newUser = await User.create({
         username,
         password: passwordHash,
@@ -46,8 +46,29 @@ const register = async(req, res) => {
 }
 
 // Login do usuário
-const login = (req, res) => {
-    res.send("login")
+const login = async (req, res) => {
+    const { username, password } = req.body
+
+    const user = await User.findOne({ username })
+
+    // Checagem da existência do usuário
+    if(!user) {
+        res.status(404).json({errors: ["Usuário não encontrado."]})
+        return
+    }
+
+    // Checagem se a senha é válida
+    if(!(await bcrypt.compare(password, user.password))) {
+        res.status(422).json({errors: ["Senha inválida"]})
+        return
+    }
+
+    // Retorna o token do usuário
+    res.status(201).json({
+        _id: user._id,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id)
+    })
 }
 
 module.exports = {
