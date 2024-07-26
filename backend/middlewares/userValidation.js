@@ -23,7 +23,6 @@ const userCreateValidation = () => {
                 }
                 return true
             }),
-
         // Validação da confirmação de senha
         body("confirmpassword")
             .isString()
@@ -58,7 +57,42 @@ const loginValidation = () => {
     ]
 }
 
+// Validações do registro de usuário
+const userUpdateValidation = () => {
+    return [
+        // Validação da senha
+        body("password")
+            .optional()
+            .isLength({ min: 8 })
+            .withMessage("A senha precisa ter no mínimo 8 caracteres.")
+            .custom(value => {
+                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).+$/
+                if (!regex.test(value)) {
+                    throw new Error('A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
+                }
+                return true
+            }),
+        // Validação da confirmação de senha
+        body("confirmpassword")
+            .if(body("password").exists())
+            .isString()
+            .withMessage("A confirmação de senha é obrigatória.")
+            .custom((value, { req }) => {
+                if (value !== req.body.password) {
+                    throw new Error("As senhas devem ser iguais.")
+                }
+                return true
+            }),
+        // Validação do campo isAdmin
+        body("isAdmin")
+            .optional()
+            .isBoolean()
+            .withMessage("O campo isAdmin deve ser um valor booleano."),
+    ]
+}
+
 module.exports = {
     userCreateValidation,
     loginValidation,
+    userUpdateValidation,
 }
