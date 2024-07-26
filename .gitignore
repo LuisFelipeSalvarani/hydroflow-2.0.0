@@ -2,3 +2,4 @@
 *env
 *tmp
 *db.js
+*docker-compose.yml
