@@ -11,11 +11,11 @@ const generateToken = (id) => {
     })
 }
 
-// Register user
+// Registro de usuário
 const register = async(req, res) => {
     const { username, password, isAdmin } = req.body
 
-    // Check if user exists
+    // Checagem da existência do usuário
     const user = await User.findOne({ username })
 
     if(user) {
@@ -23,7 +23,7 @@ const register = async(req, res) => {
         return
     }
 
-    // Generate password hash
+    // Geração do Hash da senha
     const salt = await bcrypt.genSalt()
     const passwordHash = await bcrypt.hash(password, salt)
 
@@ -34,7 +34,7 @@ const register = async(req, res) => {
         isAdmin
     })
 
-    // If user was created successfully, return the token
+    // Se o usuário for criado com sucesso, retorna o token
     if(!newUser) {
         res.status(422).json({errors: ["Houve um erro, por favor tente mais tarde."]})
     }
@@ -45,6 +45,12 @@ const register = async(req, res) => {
     })
 }
 
+// Login do usuário
+const login = (req, res) => {
+    res.send("login")
+}
+
 module.exports = {
     register,
+    login,
 }

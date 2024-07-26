@@ -1,5 +1,6 @@
 const { body } = require("express-validator")
 
+// Validações do registro de usuário
 const userCreateValidation = () => {
     return [
         // Validação do nome de usuário
@@ -41,6 +42,23 @@ const userCreateValidation = () => {
     ]
 }
 
+// Validações do login de usuário
+const loginValidation = () => {
+    return [
+        // Validação do nome de usuário
+        body("username")
+            .isString()
+            .withMessage("O nome de usuário é obrigatório.")
+            .isLength({ min: 3 })
+            .withMessage("O nome de usuário inválido."),
+        // Validação da senha
+        body("password")
+            .isString()
+            .withMessage("A senha é obrigatória.")
+    ]
+}
+
 module.exports = {
     userCreateValidation,
+    loginValidation,
 }
