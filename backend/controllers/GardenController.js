@@ -209,10 +209,53 @@ const updateAreas = async(req, res) => {
     }
 }
 
+// Deletar ou restaurar uma área
+const deletedOrRestoreArea = async (req, res) => {
+    const { id, gardenId } = req.body
+
+    try {
+        // Busca o jardim pelo ID e seleciona apenas o campo areas
+        const garden = await Garden.findById(new mongoose.Types.ObjectId(gardenId)).select("areas");
+
+        // Checagem da existência do jardim
+        if (!garden) {
+            return res.status(404).json({ errors: ["Jardim não encontrado."] });
+        }
+
+        // Busca a área específica pelo ID
+        const area = garden.areas.id(id);
+
+        // Checagem da existência da área
+        if (!area) {
+            return res.status(404).json({ errors: ["Área não encontrada no jardim."] });
+        }
+
+        // Alterna o estado de deletedAt
+        if (area.deletedAt) {
+            area.deletedAt = null;
+
+            await garden.save();
+
+            res.status(200).json(garden);
+            return
+        }
+        
+        area.deletedAt = new Date();        
+
+        await garden.save();
+
+        res.status(200).json(garden);
+    } catch (error) {
+        res.status(404).json({errors: ["Erro ao excluir o jardim."]})
+        return
+    }
+}
+
 module.exports = {
     register,
     update,
     deletedOrRestore,
     registerAreas,
     updateAreas,
+    deletedOrRestoreArea,
 }
