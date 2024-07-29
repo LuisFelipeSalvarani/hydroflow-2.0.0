@@ -99,6 +99,48 @@ const update = async(req, res) => {
     res.status(200).json(garden)
 }
 
+// Deletar ou restaurar jardim
+const deletedOrRestore = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const garden = await Garden.findById(new mongoose.Types.ObjectId(id))
+
+        // Checagem da existência do usuário
+        if(!garden) {
+            res.status(404).json({errors: ["Jardim não encontrado."]})
+            return
+        }
+
+        // Checa se o jardim foi deletado e restaura
+        if (garden.deletedAt) {
+            garden.deletedAt = null;
+
+            // Restaura todas as áreas
+            garden.areas.forEach(area => {
+                area.deletedAt = null;
+            });
+
+            await garden.save();
+
+            return res.status(200).json(garden);
+        }
+
+        garden.deletedAt = new Date();
+
+        garden.areas.forEach(area => {
+            area.deletedAt = new Date();
+        });
+
+        await garden.save()
+
+        res.status(200).json(garden)
+    } catch (error) {
+        res.status(404).json({errors: ["Erro ao excluir o jardim."]})
+        return
+    }
+}
+
 // Registrar áreas
 const registerAreas = async(req, res) => {
     const { id, areas } = req.body
@@ -170,6 +212,7 @@ const updateAreas = async(req, res) => {
 module.exports = {
     register,
     update,
+    deletedOrRestore,
     registerAreas,
     updateAreas,
 }
