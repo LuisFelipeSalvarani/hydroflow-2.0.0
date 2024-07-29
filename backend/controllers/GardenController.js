@@ -2,7 +2,7 @@ const Garden = require("../models/Garden")
 
 const mongoose = require("mongoose")
 
-// Registro de Jardins e areas
+// Registrar Jardins e areas
 const register = async(req, res) => {
     const { name, size, cep, adress, number, complement, district, city, state, description, areas } = req.body
 
@@ -99,7 +99,41 @@ const update = async(req, res) => {
     res.status(200).json(garden)
 }
 
+// Registrar areas
+const registerAreas = async(req, res) => {
+    const { id, areas } = req.body
+
+    try {
+        // Busca o jardim pelo ID e seleciona apenas o campo areas
+        const garden = await Garden.findById(new mongoose.Types.ObjectId(id)).select("areas");
+
+        // Checagem da existência do jardim
+        if (!garden) {
+            return res.status(404).json({ errors: ["Jardim não encontrado."] });
+        }
+
+        // Verificação da existência do nome da área
+        for (const newArea of areas) {
+            const areaExists = garden.areas.some(area => area.name === newArea.name);
+            if (areaExists) {
+                return res.status(422).json({ errors: ["Nome de área já existente."] });
+            }
+        }
+
+        // Adiciona as novas áreas ao jardim
+        garden.areas.push(...areas);
+
+        // Salva as alterações no jardim
+        await garden.save();
+
+        res.status(201).json(garden);
+    } catch (error) {
+        res.status(500).json({ errors: ["Erro ao registrar áreas."] });
+    }
+}
+
 module.exports = {
     register,
     update,
+    registerAreas,
 }

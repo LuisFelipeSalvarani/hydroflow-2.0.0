@@ -62,9 +62,9 @@ const gardenUpdateValidation = () => {
         // Validação do nome do jardim
         body("id")
             .isString()
-            .withMessage("O id do jardim é obrigatório.")
+            .withMessage("O jardim é obrigatório.")
             .isMongoId()
-            .withMessage("Id do jardim inválido."),
+            .withMessage("Jjardim inválido."),
         // Validação do nome do jardim
         body("name")
             .isString()
@@ -106,7 +106,32 @@ const gardenUpdateValidation = () => {
     ]
 }
 
+// Validações da atualização de jardim
+const areaCreateValidation = () => {
+    return [
+        // Validação do id do jardim
+        body("id")
+            .isString()
+            .withMessage("O jardim é obrigatório.")
+            .isMongoId()
+            .withMessage("Jardim inválido."),
+        // Validações das áreas
+        body("areas")
+            .isArray()
+            .withMessage("Nenhuma área nova encontrada."),
+        // Validação do nome da area
+        body("areas.*.name")
+            .isString()
+            .withMessage("O nome da área é obrigatório."),
+        // Validação do tipo de planta da área
+        body("areas.*.plantType")
+            .isString()
+            .withMessage("O tipo de planta é obrigatório.")
+    ]
+}
+
 module.exports = {
     gardenCreateValidation,
     gardenUpdateValidation,
+    areaCreateValidation,
 }
