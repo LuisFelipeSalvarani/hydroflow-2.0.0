@@ -124,8 +124,8 @@ const getUserById = async (req, res) => {
     }
 }
 
-// Deletar o usuário pelo id
-const deleteById = async (req, res) => {
+// Deletar ou restaurar o usuário pelo id
+const deletedOrRestoreById = async (req, res) => {
     const { id } = req.params
 
     try {
@@ -137,8 +137,13 @@ const deleteById = async (req, res) => {
             return
         }
 
+        // Checa se o usuário foi deletado e recupera
         if(user.deletedAt) {
-            res.status(404).json({errors: ["Usuário já excluído."]})
+            user.deletedAt = null
+
+            await user.save()
+
+            res.status(200).json(user)
             return
         }
 
@@ -159,5 +164,5 @@ module.exports = {
     getCurrentUser,
     update,
     getUserById,
-    deleteById,
+    deletedOrRestoreById,
 }
