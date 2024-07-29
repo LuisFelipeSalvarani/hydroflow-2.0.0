@@ -14,16 +14,15 @@ const areaSchema = new Schema({
 const gardenSchema = new Schema({
     name: String,
     size: Number,
+    cep: String,
     adress: String,
     number: Number,
+    complement: String,
     district: String,
     city: String,
     state: String,
     description: String,
-    state: String,
-    areas: {
-        type: [areaSchema]
-    },
+    areas: [areaSchema],
     deletedAt: {
         type: Date,
         default: null,
