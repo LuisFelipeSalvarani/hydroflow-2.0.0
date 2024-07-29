@@ -11,6 +11,26 @@ const getGardens = async (req, res) => {
     res.status(200).json(gardens)
 }
 
+// Resgate de jardin pelo id
+const getGardenById = async (req, res) => {
+    const { id } = req.params
+
+    // Busca o jardim pelo ID
+    const garden = await Garden.findById(id);
+
+    // Checagem da existência do jardim e se ele não está marcado como deletado
+    if (!garden || garden.deletedAt) {
+        return res.status(404).json({ errors: "Nenhum jardim encontrado." });
+    }
+
+    // Filtra as áreas para remover aquelas que estão deletadas
+    const activeAreas = garden.areas.filter(area => !area.deletedAt);
+    const gardenData = garden.toObject();
+    gardenData.areas = activeAreas;
+
+    res.status(200).json(gardenData);
+}
+
 // Registrar Jardins e areas
 const register = async(req, res) => {
     const { name, size, cep, adress, number, complement, district, city, state, description, areas } = req.body
@@ -262,6 +282,7 @@ const deletedOrRestoreArea = async (req, res) => {
 
 module.exports = {
     getGardens,
+    getGardenById,
     register,
     update,
     deletedOrRestore,

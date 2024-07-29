@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 // Controller
-const { register, update, registerAreas, updateAreas, deletedOrRestore, deletedOrRestoreArea, getGardens } = require("../controllers/GardenController")
+const { register, update, registerAreas, updateAreas, deletedOrRestore, deletedOrRestoreArea, getGardens, getGardenById } = require("../controllers/GardenController")
 
 // Middlewares
 const validate = require("../middlewares/handleValidation")
@@ -12,6 +12,7 @@ const adminGuard = require("../middlewares/adminGuard")
 
 // Routes
 router.get("/", authGuard, getGardens)
+router.get("/:id", authGuard, getGardenById)
 router.post("/register", authGuard, gardenCreateValidation(), validate, register)
 router.put("/", authGuard, gardenUpdateValidation(), validate, update)
 router.put("/:id", authGuard, adminGuard, deletedOrRestore)
