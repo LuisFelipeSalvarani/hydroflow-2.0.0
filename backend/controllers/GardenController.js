@@ -39,6 +39,67 @@ const register = async(req, res) => {
     })
 }
 
+// Atualizar Jardim
+const update = async(req, res) => {
+    const { id, name, size, cep, adress, number, complement, district, city, state, description } = req.body
+
+    const garden = await Garden.findById(new mongoose.Types.ObjectId(id)).select("-areas")
+
+    // Checagem da existência do jardim
+    if(!garden) {
+        res.status(404).json({errors: ["Jardim não encontrado."]})
+        return
+    }
+
+    if(!(await Garden.findOne({ name }))) {
+        garden.name = name
+    } else {
+        res.status(404).json({errors: ["Nome de jardim já existente."]})
+        return
+    }
+
+    if(size) {
+        garden.size = size
+    }
+
+    if(cep) {
+        garden.cep = cep
+    }
+    
+    if(adress) {
+        garden.adress = adress
+    }
+    
+    if(number) {
+        garden.number = number
+    }
+
+    if(complement) {
+        garden.complement = complement
+    }
+    
+    if(district) {
+        garden.district = district
+    }
+    
+    if(city) {
+        garden.city = city
+    }
+    
+    if(state) {
+        garden.state = state
+    }
+    
+    if(description) {
+        garden.description = description
+    }
+
+    await garden.save()
+
+    res.status(200).json(garden)
+}
+
 module.exports = {
-    register
+    register,
+    update,
 }
