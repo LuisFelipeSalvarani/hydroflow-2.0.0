@@ -2,6 +2,15 @@ const Garden = require("../models/Garden")
 
 const mongoose = require("mongoose")
 
+// Resgate de jardins
+const getGardens = async (req, res) => {
+    const gardens = await Garden.find({deletedAt: null})
+
+    if(!gardens) res.status(404).json({errors: "Nenhum jardim encontrado."})
+    
+    res.status(200).json(gardens)
+}
+
 // Registrar Jardins e areas
 const register = async(req, res) => {
     const { name, size, cep, adress, number, complement, district, city, state, description, areas } = req.body
@@ -252,6 +261,7 @@ const deletedOrRestoreArea = async (req, res) => {
 }
 
 module.exports = {
+    getGardens,
     register,
     update,
     deletedOrRestore,
