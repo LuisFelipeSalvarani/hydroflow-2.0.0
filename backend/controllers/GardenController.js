@@ -1,5 +1,4 @@
-const { Garden } = require("../models/Garden")
-const User = require("../models/User")
+const Garden = require("../models/Garden")
 
 const mongoose = require("mongoose")
 
@@ -8,7 +7,7 @@ const register = async(req, res) => {
     const { name, size, cep, adress, number, complement, district, city, state, description, areas } = req.body
 
     // Checagem da existência do jardim
-    const garden = await User.findOne({ name })
+    const garden = await Garden.findOne({ name })
 
     if(garden) {
         res.status(422).json({errors: ["Nome de jardim já existente."]})

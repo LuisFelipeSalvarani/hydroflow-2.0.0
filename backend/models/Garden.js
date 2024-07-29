@@ -9,6 +9,9 @@ const areaSchema = new Schema({
         type: Date,
         default: null,
     }
+},
+{
+    timestamps: true
 })
 
 const gardenSchema = new Schema({
@@ -33,6 +36,5 @@ const gardenSchema = new Schema({
 })
 
 const Garden = mongoose.model("Garden", gardenSchema)
-const Area = mongoose.model("Area", areaSchema)
 
-module.exports = { Garden, Area }
+module.exports = Garden

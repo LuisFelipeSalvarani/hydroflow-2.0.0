@@ -41,10 +41,18 @@ const gardenCreateValidation = () => {
             .withMessage("O estado é obrigatório.")
             .isLength({max: 2})
             .withMessage("Estado inválido"),
-        // Validação de área
+        // Validações das áreas
         body("areas")
             .isArray()
             .withMessage("O jardim deve conter pelo menos uma área."),
+        // Validação do nome da área
+        body("areas.*.name")
+            .isString()
+            .withMessage("O nome da área é obrigatório."),
+        // Validação do tipo de planta da área
+        body("areas.*.plantType")
+            .isString()
+            .withMessage("O tipo de planta é obrigatório.")
     ]
 }
 
