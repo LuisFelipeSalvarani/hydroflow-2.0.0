@@ -99,7 +99,7 @@ const update = async(req, res) => {
     res.status(200).json(garden)
 }
 
-// Registrar areas
+// Registrar áreas
 const registerAreas = async(req, res) => {
     const { id, areas } = req.body
 
@@ -132,8 +132,44 @@ const registerAreas = async(req, res) => {
     }
 }
 
+// Atualizar áreas
+const updateAreas = async(req, res) => {
+    const { id, name, plantType, description, gardenId } = req.body
+
+    try {
+        // Busca o jardim pelo ID e seleciona apenas o campo areas
+        const garden = await Garden.findById(gardenId).select("areas");
+
+        // Checagem da existência do jardim
+        if (!garden) {
+            return res.status(404).json({ errors: ["Jardim não encontrado."] });
+        }
+
+        // Busca da área específica pelo ID
+        const area = garden.areas.id(id);
+
+        // Checagem da existência da área
+        if (!area) {
+            return res.status(404).json({ errors: ["Área não encontrada no jardim."] });
+        }
+
+        // Atualização dos campos da área
+        if (name) area.name = name;
+        if (plantType) area.plantType = plantType;
+        if (description) area.description = description;
+
+        // Salva as alterações no documento do jardim
+        await garden.save();
+
+        res.status(200).json(garden);
+    } catch (error) {
+        res.status(500).json({ errors: ["Erro ao buscar a área."] });
+    }
+}
+
 module.exports = {
     register,
     update,
     registerAreas,
+    updateAreas,
 }
