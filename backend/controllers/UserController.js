@@ -117,7 +117,36 @@ const getUserById = async (req, res) => {
             return
         }
 
-         res.status(200).json(user)
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(404).json({errors: ["Usuário não encontrado."]})
+        return
+    }
+}
+
+// Deletar o usuário pelo id
+const deleteById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const user = await User.findById(new mongoose.Types.ObjectId(id)).select("-password")
+
+        // Checagem da existência do usuário
+        if(!user) {
+            res.status(404).json({errors: ["Usuário não encontrado."]})
+            return
+        }
+
+        if(user.deletedAt) {
+            res.status(404).json({errors: ["Usuário já excluído."]})
+            return
+        }
+
+        user.deletedAt = new Date()
+
+        await user.save()
+
+        res.status(200).json(user)
     } catch (error) {
         res.status(404).json({errors: ["Usuário não encontrado."]})
         return
@@ -130,4 +159,5 @@ module.exports = {
     getCurrentUser,
     update,
     getUserById,
+    deleteById,
 }

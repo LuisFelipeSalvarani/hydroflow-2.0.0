@@ -5,6 +5,10 @@ const userSchema = new Schema({
     username: String,
     password: String,
     isAdmin: Boolean,
+    deletedAt: {
+        type: Date,
+        default: null,
+    }
 },
 {
     timestamps: true
