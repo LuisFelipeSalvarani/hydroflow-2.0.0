@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 // Controller
-const { register, login, getCurrentUser, update, getUserById, deletedOrRestoreById } = require("../controllers/UserController")
+const { register, login, getCurrentUser, update, getUserById, deletedOrRestoreById, getUsers } = require("../controllers/UserController")
 
 // Middlewares
 const validate = require("../middlewares/handleValidation")
@@ -13,6 +13,7 @@ const adminGuard = require("../middlewares/adminGuard")
 // Routes
 router.post("/register", authGuard, adminGuard, userCreateValidation(), validate, register)
 router.post("/login", loginValidation(), validate, login)
+router.get("/", authGuard, adminGuard, getUsers)
 router.get("/profile", authGuard, adminGuard, getCurrentUser)
 router.put("/", authGuard, adminGuard, userUpdateValidation(), validate, update)
 router.put("/:id", authGuard, adminGuard, deletedOrRestoreById)

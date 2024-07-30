@@ -104,6 +104,24 @@ const update = async (req, res) => {
     res.status(200).json(user)
 }
 
+// Obter todos os usuários usuário
+const getUsers = async (req, res) => {
+    try {
+        const users = await User.find({deletedAt: null}).select("-password")
+
+        // Checagem da existência do usuário
+        if(!users) {
+            res.status(404).json({errors: ["Nenhum usuário encontrado."]})
+            return
+        }
+
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(404).json({errors: ["Usuário não encontrado."]})
+        return
+    }
+}
+
 // Obter usuário pelo id
 const getUserById = async (req, res) => {
     const { id } = req.params
@@ -163,6 +181,7 @@ module.exports = {
     login,
     getCurrentUser,
     update,
+    getUsers,
     getUserById,
     deletedOrRestoreById,
 }
