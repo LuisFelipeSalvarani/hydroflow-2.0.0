@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 
 // Controller
-const { register, getDevices, getDeviceById, update } = require("../controllers/DeviceController")
+const { register, getDevices, getDeviceById, update, deleteOrRestore } = require("../controllers/DeviceController")
 
 // Middlewares
 const validate = require("../middlewares/handleValidation")
@@ -15,5 +15,6 @@ router.get("/", authGuard, getDevices)
 router.get("/:id", authGuard, getDeviceById)
 router.post("/register", authGuard, deviceCreateValidation(), validate, register)
 router.put("/", authGuard, deviceUpdateValidation(), validate, update)
+router.put("/:id", authGuard, adminGuard, deleteOrRestore)
 
 module.exports = router

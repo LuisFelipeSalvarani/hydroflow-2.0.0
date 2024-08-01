@@ -133,9 +133,37 @@ const update = async (req, res) => {
     res.status(200).json(device)
 }
 
+// Deletar ou restaurar o dispositivo
+const deleteOrRestore = async (req, res) => {
+    const { id } = req.params
+
+    const device = await Device.findById(id)
+
+    if(!device) {
+        res.status(404).json({errors: "Dispositivo não encontrado."})
+    }
+
+    // Checa se o dispositivo foi deletado e recupera
+    if(device.deletedAt) {
+        device.deletedAt = null
+
+        await device.save()
+
+        res.status(200).json(device)
+        return
+    }
+
+    device.deletedAt = new Date()
+
+    await device.save()
+
+    res.status(200).json(device)
+}
+
 module.exports = {
     register,
     getDevices,
     getDeviceById,
     update,
+    deleteOrRestore,
 }
