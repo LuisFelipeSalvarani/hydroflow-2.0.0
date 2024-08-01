@@ -44,7 +44,7 @@ const register = async(req, res) => {
     }
 
     // Criação do jardim
-    const newGardem = await Garden.create({
+    const newGarden = await Garden.create({
         name,
         size,
         cep,
@@ -59,12 +59,12 @@ const register = async(req, res) => {
     })
 
     // Se o jardim for criado com sucesso, retorna o id
-    if(!newGardem) {
+    if(!newGarden) {
         res.status(422).json({errors: ["Houve um erro, por favor tente mais tarde."]})
     }
 
     res.status(201).json({
-        _id: newGardem._id,
+        _id: newGarden._id,
     })
 }
 
