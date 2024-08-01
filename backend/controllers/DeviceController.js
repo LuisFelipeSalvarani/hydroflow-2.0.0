@@ -55,7 +55,7 @@ const register = async(req, res) => {
 
 // Resgate de todos os dispostivos
 const getDevices = async (req, res) => {
-    const devices = await Device.find({ deleteAt: null })
+    const devices = await Device.find({deletedAt: null})
 
     // Verifica se existe algum dispositivo
     if (!devices) {
@@ -66,7 +66,22 @@ const getDevices = async (req, res) => {
     res.status(200).json(devices)
 }
 
+// Resgate de dispostivo pelo id
+const getDeviceById = async (req, res) => {
+    const { id } = req.params
+
+    const device = await Device.findById(id)
+
+    // Checagem da existência do dispositivo e se ele não está marcado como deletado
+    if (!device || device.deletedAt) {
+        return res.status(404).json({ errors: "Nenhum jardim encontrado." });
+    }
+
+    res.status(200).json(device)
+}
+
 module.exports = {
     register,
     getDevices,
+    getDeviceById
 }
