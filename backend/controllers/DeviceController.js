@@ -80,8 +80,62 @@ const getDeviceById = async (req, res) => {
     res.status(200).json(device)
 }
 
+// Atualizar dispositivo
+const update = async (req, res) => {
+    const { id, name, serial, areaId, gardenId, description } = req.body
+
+    const device = await Device.findById(id)
+
+    if(!device) {
+        res.status(404).json({errors: "Dispositivo não encontrado."})
+        return
+    }
+
+    if(name) {
+        const deviceName = await Device.findOne({ name })
+
+        if(!deviceName.name === device.name) if(deviceName) return res.status(404).json({errors: "Nome de dispostivo já existente."})
+
+        device.name = name
+    }
+
+    if(serial) {
+        const deviceSerial = await Device.findOne({ serial })
+
+        if(!deviceSerial.serial === device.serial) if(deviceSerial) return res.status(404).json({errors: "Dispostivo já cadastrado."})
+
+        device.serial = serial
+    }
+
+    if(gardenId) {
+        // Checagem da existência do jardim
+        const garden = await Garden.findById(gardenId)
+
+        if(!garden) {
+            res.status(422).json({errors: ["Jardim não encontrado."]})
+            return
+        }
+
+        if(areaId) {
+            // Checagem da existência da área
+            const area = garden.areas.id(areaId);
+
+            if (!area) {
+                return res.status(404).json({ errors: ["Área não encontrada no jardim."] });
+            }
+        }
+    }
+
+    if (description) device.description = description
+
+    await device.save()
+
+    res.status(200).json(device)
+}
+
 module.exports = {
     register,
     getDevices,
-    getDeviceById
+    getDeviceById,
+    update,
 }
