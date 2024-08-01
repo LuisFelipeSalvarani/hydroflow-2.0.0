@@ -53,6 +53,20 @@ const register = async(req, res) => {
     res.status(201).json(newDevice)
 }
 
+// Resgate de todos os dispostivos
+const getDevices = async (req, res) => {
+    const devices = await Device.find({ deleteAt: null })
+
+    // Verifica se existe algum dispositivo
+    if (!devices) {
+        res.status(404).json({errors: "Nenhum dispositivo encontrado."})
+        return
+    }
+
+    res.status(200).json(devices)
+}
+
 module.exports = {
-    register
+    register,
+    getDevices,
 }
