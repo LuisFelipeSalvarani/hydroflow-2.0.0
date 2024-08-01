@@ -10,7 +10,7 @@ const register = async(req, res) => {
     // Checagem da existência do jardim
     const garden = await Garden.findById(gardenId)
 
-    if(garden) {
+    if(!garden) {
         res.status(422).json({errors: ["Jardim não encontrado."]})
         return
     }
@@ -23,21 +23,21 @@ const register = async(req, res) => {
     }
 
     // Checagem da existência do dispositivo
-    const device = Device.findOne({ serial })
+    const device = await Device.findOne({ serial })
     
-    if (!device) {
+    if (device) {
         return res.status(404).json({ errors: ["Dispositivo já cadastrado."] });
     }
 
     // Checagem da existência do nome do dispositivo
-    const deviceName = Device.findOne({ name })
+    const deviceName = await Device.findOne({ name })
     
-    if (!deviceName) {
+    if (deviceName) {
         return res.status(404).json({ errors: ["Nome de dispositivo já existente."] });
     }
 
     // Criação do dispositivio
-    const newDevice = await device.create({
+    const newDevice = await Device.create({
         name,
         serial,
         areaId,
@@ -50,7 +50,7 @@ const register = async(req, res) => {
         res.status(422).json({errors: ["Houve um erro, por favor tente mais tarde."]})
     }
 
-    res.status(201).json(device)
+    res.status(201).json(newDevice)
 }
 
 module.exports = {

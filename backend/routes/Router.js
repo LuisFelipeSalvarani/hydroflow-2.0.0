@@ -3,6 +3,7 @@ const router = express()
 
 router.use("/api/users", require("./UserRoutes"))
 router.use("/api/gardens", require("./GardenRoutes"))
+router.use("/api/devices", require("./DeviceRoutes"))
 
 router.get("/", (req, res) => {
     res.send("API Trabalhando!")
