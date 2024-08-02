@@ -2,6 +2,9 @@ const mongoose = require("mongoose")
 const { Schema } = mongoose
 
 const parametersSchema = new Schema({
+    deviceId: mongoose.ObjectId,
+    areaId: mongoose.ObjectId,
+    gardenId: mongoose.ObjectId,
     startTime: String,
     endTime: String,
     minTemp: String,
@@ -11,9 +14,6 @@ const parametersSchema = new Schema({
     minFlow: String,
     maxFlow: String,
     days: Array,
-    deviceId: mongoose.ObjectId,
-    areaId: mongoose.ObjectId,
-    gardenId: mongoose.ObjectId,
     deletedAt: {
         type: Date,
         default: null,
