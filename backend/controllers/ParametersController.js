@@ -66,6 +66,28 @@ const register = async(req, res) => {
     res.status(201).json(newParameters)
 }
 
+// Obter parametro pelo id do dispositivo
+const getParameterByDeviceId = async (req, res) => {
+    const { id } = req.params
+
+    const device = await Device.findById(id)
+
+    if(!device) {
+        res.status(404).json({errors: "Dispositivo não encontrado."})
+        return
+    }
+
+    const parameters = await Parameters.findOne({ deviceId: id, deletedAt: null })
+
+    if(!parameters) {
+        res.status(404).json({errors: "Não há parêmetros para esse dispositivo."})
+        return
+    }
+
+    res.status(200).json(parameters)
+}
+
 module.exports = {
     register,
+    getParameterByDeviceId,
 }

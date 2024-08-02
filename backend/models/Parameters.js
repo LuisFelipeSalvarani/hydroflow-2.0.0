@@ -14,6 +14,10 @@ const parametersSchema = new Schema({
     minFlow: String,
     maxFlow: String,
     days: Object,
+    groupId: {
+        type: mongoose.ObjectId,
+        default: null,
+    },
     deletedAt: {
         type: Date,
         default: null,
