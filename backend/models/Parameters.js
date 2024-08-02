@@ -13,7 +13,7 @@ const parametersSchema = new Schema({
     maxHumi: String,
     minFlow: String,
     maxFlow: String,
-    days: Array,
+    days: Object,
     deletedAt: {
         type: Date,
         default: null,

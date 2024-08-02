@@ -77,11 +77,15 @@ const parameterCreateValidation = () => {
             }),
         // Validação do array de dias 
         body("days")
-            .isArray({min: 1})
-            .withMessage("É obrigatório selecionar pelo menos 1 dia."),
-        body("days.*")
-            .isBoolean()
-            .withMessage("Os dias devem ser verdadeiros ou falsos.")
+            .isObject()
+            .withMessage("É obrigatório selecionar pelo menos 1 dia.")
+            .custom((value) => {
+                const daysArray = Object.values(value);
+                if (!daysArray.some(day => day === true)) {
+                    throw new Error("É obrigatório selecionar pelo menos 1 dia.");
+                }
+                return true;
+            }),
     ]
 }
 
